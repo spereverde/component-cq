@@ -1,12 +1,24 @@
+<svelte:options accessors />
+
 <script>
   import { onMount } from "svelte";
   import { apiData, cqElements } from "./store.js";
 
+  export let cq;
+  export let languageSetting;
+  let language = "";
+  if ((languageSetting = "en")) {
+    language = "-en";
+  }
+
+  let apiBaseUrl = "https://search-es6.q.icts.kuleuven.be/oa";
+  let url = apiBaseUrl + language + "/_doc/" + cq;
+
   onMount(async () => {
-    fetch("https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=Bourbon")
+    fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         apiData.set(data);
       })
       .catch((error) => {
@@ -14,16 +26,18 @@
         return [];
       });
   });
-  export let cq;
 </script>
 
 <main>
-  <h1>CQ: {cq}</h1>
-  <ul>
-    {#each $cqElements as cqElement}
-      <li>{cqElement}</li>
-    {/each}
-  </ul>
+  <h1 class="hidden">CQ: {cq}</h1>
+
+  {#each $cqElements as cq}
+    <p><strong>{cq.programmeTitle}</strong></p>
+    <p>{cq.city}</p>
+    <p>{cq.educationalLevel}</p>
+    <p>{cq.credits}</p>
+    <p>{cq.dhoLanguage}</p>
+  {/each}
 </main>
 
 <style>
