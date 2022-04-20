@@ -12,7 +12,7 @@ Here, we'll create a derived store to hold the CQ elements we need to display.
 **/
 export const cqElements = derived(apiData, ($apiData) => {
   if ($apiData._source) {
-    // console.log($apiData._source.ProgrammeSet);
+    console.log($apiData._source.ProgrammeSet);
     let cq_data = $apiData._source.ProgrammeSet.map(
       (programmeTitle) => programmeTitle,
       (city) => city,
