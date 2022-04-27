@@ -1,63 +1,30 @@
-<svelte:options accessors />
-<svelte:head>
-    <style>
-        @import url("https://fonts.googleapis.com/css2?family=Material+Icons&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap");
-    </style>
-</svelte:head>
-
 <script>
-  import { onMount } from "svelte";
-  import { apiData, cqElements } from "./store.js";
-
-  export let cq;
-  export let languageSetting;
-  let language = "";
-  if ((languageSetting = "en")) {
-    language = "-en";
-  }
-
-  let apiBaseUrl = "https://search-es6.q.icts.kuleuven.be/oa";
-  let url = apiBaseUrl + language + "/_doc/" + cq;
-
-  onMount(async () => {
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        // console.log(data);
-        apiData.set(data);
-      })
-      .catch((error) => {
-        console.log(error);
-        return [];
-      });
-  });
+	export let name;
 </script>
 
 <main>
-  <h1 class="hidden">CQ: {cq}</h1>
-  <div class="card-body">
-  {#each $cqElements as cq}
-    {#if cq.programmeTitle}
-      <p><strong> {cq.programmeTitle}</strong></p>
-    {/if}
-    {#if cq.city}
-      <p><i class="material-icons">place</i>{cq.city}</p>
-    {/if}
-    {#if cq.educationalLevel}
-      <p><i class="material-icons">school</i> {cq.educationalLevel}</p>
-    {/if}
-    {#if cq.credits}
-      <p><i class="material-icons">schedule</i> {Math.trunc(cq.credits)}</p>
-    {/if}
-    {#if cq.dhoLanguage}
-      <p><i class="material-icons">language</i> {cq.dhoLanguage}</p>
-    {/if}
-  {/each}
-  </div>
+	<h1>Hello {name}!</h1>
+	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
 </main>
 
 <style>
-  .card-body{
-    padding: 30px;
-  }
+	main {
+		text-align: center;
+		padding: 1em;
+		max-width: 240px;
+		margin: 0 auto;
+	}
+
+	h1 {
+		color: #ff3e00;
+		text-transform: uppercase;
+		font-size: 4em;
+		font-weight: 100;
+	}
+
+	@media (min-width: 640px) {
+		main {
+			max-width: none;
+		}
+	}
 </style>
