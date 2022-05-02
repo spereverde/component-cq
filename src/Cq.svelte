@@ -49,7 +49,7 @@
 </script>
   
 <div>
-    <h1>CQ: {cq}</h1>
+    <!-- <h1>CQ: {cq}</h1> -->
     <div>
         {#each cqElements as cq}
         {#if cq.programmeTitle}
