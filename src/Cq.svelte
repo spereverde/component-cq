@@ -6,26 +6,21 @@
     </style>
 </svelte:head>
 <script>
-    import { apiData, cqElements } from "./store.js";
-
     export let cq;
     export let language_setting;
     let language = "";
-    $: if ((language_setting == "en")) {
-      language = "-en";
-    }
+    let cqElements = []
+
+    $: language_setting === "en" ? language = "-en" : language = "";
   
     let apiBaseUrl = "https://search-es6.q.icts.kuleuven.be/oa";
     $: url = (cq != null && language != null)? apiBaseUrl + language + "/_doc/" + cq : null;
-
-    $: console.log("url:" + url);
 
     $: if (url != null){
         fetch(url)
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
-          apiData.set(data);
+          cqElements = map_data(data);
         })
         .catch((error) => {
           console.log(error);
@@ -33,40 +28,30 @@
         });
     }
 
-    // $: console.log("language_setting: "+language_setting);
-    // console.log("cq: "+cq);
+    // $: console.log("cqElements: "+JSON.stringify(cqElements)); putting this in above if reactive statement causes infinte loop
 
-    // fetch(url)
-    //     .then((response) => response.json())
-    //     .then((data) => {
-    //       console.log(data);
-    //       apiData.set(data);
-    //     })
-  
-    // onMount(async () => {
-    //     await tick();
-    //     console.log("in onMount");
-    //     let url = apiBaseUrl + language + "/_doc/" + cq;
-    //     console.log("in onmount url: "+url);
-    //   fetch(url)
-    //     .then((response) => response.json())
-    //     .then((data) => {
-    //       // console.log(data);
-    //       apiData.set(data);
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //       return [];
-    //     });
-    // });
-  </script>
+    function map_data(data){
+        if (data._source && data._source.ProgrammeSet) {
+            let cq_data = data._source.ProgrammeSet.map(
+                (programmeTitle) => programmeTitle,
+                (city) => city,
+                (educationLevel) => educationalLevel,
+                (credits) => credits,
+                (dhoLanguage) => dhoLanguage
+            );
+            return cq_data;
+        }
+        else{
+            return []
+        }
+    }
+
+</script>
   
 <div>
-    <!-- <link rel='stylesheet' href="https://fonts.googleapis.com/css2?family=Material+Icons&family=Source+Sans+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"> -->
-
     <h1>CQ: {cq}</h1>
     <div>
-        {#each $cqElements as cq}
+        {#each cqElements as cq}
         {#if cq.programmeTitle}
             <p><strong> {cq.programmeTitle}</strong></p>
         {/if}
